@@ -1,8 +1,9 @@
 
 ##What is gitBox?##
 
-gitBox is an alternative to dropBox for paranoid people like me, who do not want to show their data to a private company.
 gitBox automatically and seamlessly synchronizes your files among several computers.
+
+gitBox is an alternative to dropBox for paranoid people like me, who do not want to show their data to a private company.
 
 ##Requirement##
 
