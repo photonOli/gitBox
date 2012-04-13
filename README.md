@@ -18,9 +18,10 @@ Then it will add a shortcut to your gitBox on your Desktop.
 
 Now, your gitBox is synced with your server every 10 minutes.
 
-If you install, gitBox on another computer, all your gitBoxes will be synced together.
+If you install gitBox on another computer, all your gitBoxes will be synced together.
 
-##Technical details##
+##Technical Explanation##
+
 ./gitbox.sh or ./gitbox.sh install will do the following:
 
 -check that your server exists and has a ssh server.
@@ -35,7 +36,7 @@ If you install, gitBox on another computer, all your gitBoxes will be synced tog
 
 -if it's not done yet, it will set up a chron job, to launch "~/.gitBox/.gitBox/.gitBox.sh sync" every 10 minutes.
 
--it will ass a shortcut from your desktop to 
+-it will add a shortcut from your desktop to your gitBox folder.
 
 -.gitBox.sh sync will be executed every 10 minutes, it will pull, then add all new files and remove all delete files and commit and then push. It will also remove git locks if there is one since more than one hour.
 
