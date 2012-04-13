@@ -1,7 +1,7 @@
 
 gitBox is an alternative to dropBox for paranoid people like me, who do not want to show their data to a private company.
 
-To use gitBox, you need your own server an a URL.
+To use gitBox, you need your own server and a URL. It works only on linux.
 
 Then launch ./gitbox.sh 
 The installation program will ask you for your server URL.
