@@ -1,8 +1,8 @@
 #! /bin/bash
 
 
-GITBOXDIR="$HOME/.gitBox"
-GITBOXSERVERDIR="$HOME/.gitBoxServer"
+GITBOXDIR=~/.gitBox
+GITBOXSERVERDIR=~/.gitBoxServer
 
 if [ $# -eq "0" ]; then
   read -p "Do you want to install gitBox (y/n)? " -n 1 -r
