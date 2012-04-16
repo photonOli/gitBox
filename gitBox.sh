@@ -151,8 +151,15 @@ sync)
   echo "sync done.";;
 
 uninstall)
+    crontab -l  | grep -v gitBox > /tmp/cron
+    crontab /tmp/cron
+    rm /tmp/cron
+    echo "cronjob removed.... OK"
+    rm -rf ~/.gitBox
+    rm -rf ~/.gitBoxServer
 
-  echo "Not yet implemented.";;
+    echo "uninstall done." ;;
+
 
 *)
   echo "Bad argument. Only 'install', 'sync' and 'uninstall' are accepted."
