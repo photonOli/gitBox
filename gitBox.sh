@@ -1,5 +1,9 @@
 #! /bin/bash
 
+
+GITBOXDIR="$HOME/.gitBox"
+GITBOXSERVERDIR="$HOME/.gitBoxServer"
+
 if [ $# -eq "0" ]; then
   read -p "Do you want to install gitBox (y/n)? " -n 1 -r
   echo ""
@@ -90,8 +94,8 @@ install)
   echo "start installing gitBox on server...."
   
   #make bare git repository on server
-  if [ -z "`ssh $server \"ls ~/.gitBoxServer\"`" ]; then
-    ssh $server `git init --bare ~/.gitBoxServer`
+  if [ -z "`ssh $server \"ls ${GITBOXSERVERDIR}\"`" ]; then
+    ssh $server `git init --bare ${GITBOXSERVERDIR}`
     echo "GitBox installed on server... OK"
   else
     echo "GitBox is already on the server."
@@ -100,10 +104,10 @@ install)
   echo "start installing gitBox locally...."
 
   #clone repository locally
-  git clone $server:.gitBoxServer/ ~/.gitBox
-  mkdir ~/.gitBox/.gitBox/
-  cp gitBox.sh ~/.gitBox/.gitBox/
-  cd ~/.gitBox/
+  git clone $server:.gitBoxServer/ ${GITBOXDIR}
+  mkdir ${GITBOXDIR}/.gitBox/
+  cp gitBox.sh ${GITBOXDIR}/.gitBox/
+  cd ${GITBOXDIR}/
   git add -A
   git commit -m "init"
   git push origin master
@@ -111,7 +115,7 @@ install)
  
   if [ -z "`crontab -l | grep gitBox`" ]; then
     crontab -l > /tmp/cron
-    echo "*/10 * * * * ~/.gitBox/.gitBox/gitBox.sh sync"  >> /tmp/cron
+    echo "*/10 * * * * ${GITBOXDIR}/.gitBox/gitBox.sh sync"  >> /tmp/cron
     crontab /tmp/cron
     rm /tmp/cron
     echo "cronjob set.... OK"
@@ -125,7 +129,7 @@ install)
     desktopFolder=`xdg-user-dir DESKTOP`
   fi
 
-  ln -s ~/.gitBox ${desktopFolder}/gitBox
+  ln -s ${GITBOXDIR} ${desktopFolder}/gitBox
 
   echo "Installation done."
   echo "You can find your gitBox folder in ${desktopFolder}/gitBox/";;
@@ -135,7 +139,7 @@ install)
 sync)
   echo "syncing..."
 
-  cd ~/.gitBox/
+  cd ${GITBOXDIR}/
 
   if [ -n "`find .git -mmin +60 -name "index.lock"`" ]; then
     rm .git/index.lock
@@ -155,8 +159,8 @@ uninstall)
     crontab /tmp/cron
     rm /tmp/cron
     echo "cronjob removed.... OK"
-    rm -rf ~/.gitBox
-    rm -rf ~/.gitBoxServer
+    rm -rf ${GITBOXDIR}
+    rm -rf ${GITBOXSERVERDIR}
 
     echo "uninstall done." ;;
 
