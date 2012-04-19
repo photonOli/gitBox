@@ -105,9 +105,10 @@ install)
   echo "start installing gitBox locally...."
 
   #clone repository locally
-  git clone $server:.gitBoxServer/ ${GITBOXDIR}
+  git clone $server:${GITBOXSERVERDIR}/ ${GITBOXDIR}
   mkdir ${GITBOXDIR}/.gitBox/
   cp gitBox.sh ${GITBOXDIR}/.gitBox/
+  cp icon.png ${GITBOXDIR}/.gitBox/
   cd ${GITBOXDIR}/
   git add -A
   git commit -m "init"
@@ -148,21 +149,34 @@ sync)
 
   git add -A
   git commit -m "bla"
-  PULL=`git pull origin master`
+  PULLOUTPUT="`git pull origin master`"
   git add -A
+
+
+  if [ -z "`echo ${PULLOUTPUT} | grep 'Already up-to-date.'`" ]; then
+    if [ -n "`which notify-send`" ]; then
+      NEWFILES="`git diff --name-only --diff-filter="A" HEAD~1 | sed 'N;s/\n/, /;'`"
+      if [ -n "${NEWFILES}" ]; then
+        NEWFILES="File added: ${NEWFILES}.\n"
+      fi
+      MODIFIEDFILES="`git diff --name-only --diff-filter="M" HEAD~1 | sed 'N;s/\n/, /;'`"
+      if [ -n "${MODIFIEDFILES}" ]; then
+        MODIFIEDFILES="Modified file: ${MODIFIEDFILES}.\n"
+      fi
+      notify-send -i ${GITBOXDIR}/.gitBox/icon.png "GitBox Update" "` echo -e "${NEWFILES}${MODIFIEDFILES}"`"
+    fi
+  fi
+
   git commit -m "bla"
   git push origin master
-  #NEWFILES= `echo $PULL | grep "create mode" | cut -d" " -f5 | sed 'N;s/\n/ /;'`
-
-  #if [ -n $NEWFILES ]; then
-  #  if [ -n "`which notify-send`" ]; then
-  #    notify-send "GitBox Update" "New files added: $NEWFILES"
-  #  fi
-  #fi
 
   echo "sync done.";;
 
 uninstall)
+    
+  read -p "Are you 100% sure that you want to UNinstall gitBox (y/n)? " -n 1 -r
+  echo ""
+  if [ $REPLY = "y" ]; then
     crontab -l  | grep -v gitBox > /tmp/cron
     crontab /tmp/cron
     rm /tmp/cron
@@ -170,8 +184,10 @@ uninstall)
     rm -rf ${GITBOXDIR}
     rm -rf ${GITBOXSERVERDIR}
 
-    echo "uninstall done." ;;
-
+    echo "uninstall done."
+  fi
+  
+  echo "";;
 
 *)
   echo "Bad argument. Only 'install', 'sync' and 'uninstall' are accepted."
