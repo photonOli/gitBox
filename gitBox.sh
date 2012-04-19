@@ -163,7 +163,11 @@ sync)
       if [ -n "${MODIFIEDFILES}" ]; then
         MODIFIEDFILES="Modified file: ${MODIFIEDFILES}.\n"
       fi
-      notify-send -i ${GITBOXDIR}/.gitBox/icon.png "GitBox Update" "` echo -e "${NEWFILES}${MODIFIEDFILES}"`"
+      DELETEDFILES="`git diff --name-only --diff-filter="D" HEAD~1 | sed 'N;s/\n/, /;'`"
+      if [ -n "${DELETEDFILES}" ]; then
+        DELETEDFILES="Removed file: ${DELETEDFILES}.\n"
+      fi
+      notify-send -i ${GITBOXDIR}/.gitBox/icon.png "GitBox Update" "` echo -e "${NEWFILES}${MODIFIEDFILES}${DELETEDFILES}"`"
     fi
   fi
 
