@@ -2,7 +2,7 @@
 
 
 GITBOXDIR=~/.gitBox
-GITBOXSERVERDIR=~/.gitBoxServer
+GITBOXSERVERDIR="~/.gitBoxServer"
 
 if [ $# -eq "0" ]; then
   read -p "Do you want to install gitBox (y/n)? " -n 1 -r
@@ -94,6 +94,7 @@ install)
   echo "start installing gitBox on server...."
   
   #make bare git repository on server
+
   if [ -z "`ssh $server \"ls ${GITBOXSERVERDIR}\"`" ]; then
     ssh $server `git init --bare ${GITBOXSERVERDIR}`
     echo "GitBox installed on server... OK"
@@ -147,10 +148,17 @@ sync)
 
   git add -A
   git commit -m "bla"
-  git pull origin master
+  PULL=`git pull origin master`
   git add -A
   git commit -m "bla"
   git push origin master
+  #NEWFILES= `echo $PULL | grep "create mode" | cut -d" " -f5 | sed 'N;s/\n/ /;'`
+
+  #if [ -n $NEWFILES ]; then
+  #  if [ -n "`which notify-send`" ]; then
+  #    notify-send "GitBox Update" "New files added: $NEWFILES"
+  #  fi
+  #fi
 
   echo "sync done.";;
 
